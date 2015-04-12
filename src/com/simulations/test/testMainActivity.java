@@ -3,7 +3,7 @@ package com.simulations.test;
 import android.app.*;
 import android.os.*;
 
-public class MainActivity extends Activity
+public class testMainActivity extends Activity
 {
     private GLSView glSView;
 

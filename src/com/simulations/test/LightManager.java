@@ -26,6 +26,7 @@ public final class LightManager {
 		 this.lighQuality = LightingQuality.PER_FRAGMENT;
 		 this.lightPositions = new ArrayList<Float>();
 		 this.lightTypeNums = new ArrayList<Short>();
+		 this.lights =  new ArrayList<Light>();
 	 }
 	 
 	 private void setLightTypesUniform(int mProgram){
@@ -82,18 +83,6 @@ public final class LightManager {
 		
 		//Add light to main scene
 		world.getMainScene().addDrawableObject(light);		
-		
-		//Set as lighted all drawable in all lighted scenes objects in world
-		for(Scene scene:world.getScenes()){
-			if(scene.getLightedState()){
-				for(GDrawable drawableObj: scene.getDrawableObjects()){
-					if(drawableObj.getClass()!= Light.class){
-						drawableObj.setLightState(true);
-					}
-				}	
-			}
-		}
-
 	 }
 	 public void removeLight(int lightIndex){
 		 	if(lights.size() == 1){ //If no light present then set drawable objects in all lighted to non lighted state
@@ -101,10 +90,7 @@ public final class LightManager {
 					if(scene.getLightedState()){
 				 		for(GDrawable drawableObj: scene.getDrawableObjects()){
 							if(drawableObj.getClass()!= Light.class){
-								if(drawableObj.getClass() == GDrawableTransformable.class)
-									((GDrawableTransformable)drawableObj).setLightState(false);
-								if(drawableObj.getClass() == GDrawablePhysicalObject.class)
-									((GDrawablePhysicalObject)drawableObj).setLightState(false);
+								drawableObj.setLightState(false);
 							}
 						}
 					}

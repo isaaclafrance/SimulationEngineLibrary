@@ -15,11 +15,14 @@ public interface GDrawable extends Animated{
 	public void setVertexShaderLocID(int locID);
 	public void setFragmentShaderLocID(int locID);
 	public void setBillboardState(boolean state);
-	public void setPosition(float x, float y, float z);
+	public void setPosition(float x, float y, float z);	
+	public void setTransparency(float value);
 	
 	public float[] getPosition();
-	public Quaternion getOrientationQuaternion();
+	
+	public Quaternion getOrientation();
 	public boolean getBillboardState();
 	public boolean getTextureState();
 	public boolean getLightState();
+	public float getTransparency();
 }

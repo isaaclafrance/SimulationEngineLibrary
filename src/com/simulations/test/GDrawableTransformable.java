@@ -16,17 +16,18 @@ public abstract class GDrawableTransformable extends Transformable implements GD
      private int vertexShadLocID;
      private int fragmentShadLocID;
      
-	 private boolean isLighted;
-	 private boolean isTextured;
-	 private boolean isShaderChanged;
+	 protected boolean isLighted;
+	 protected boolean isTextured;
+	 protected boolean isShaderChanged;
 	 
-	 private boolean isBillboard; //If true, then the texture rotates such that it is always facing the camera
+	 protected boolean isBillboard; //If true, then the texture rotates such that it is always facing the camera
 
 	 public GDrawableTransformable(float x, float y, float z, 
 	                       float r, float g, float b, float transparency, float[] shapeCoords, short[] indices){
 		 super(x,y,z);
 		 
-		 vManager = new VertexManager(shapeCoords, indices, true);
+		 isLighted = false;	
+		 vManager = new VertexManager(shapeCoords, indices, isLighted);
 		 cManager = new ColorManager(r, g, b, transparency, vManager.getNumOfDrawnVertices());
 		 tManager = null;
 		 isTextured = false;
@@ -35,8 +36,7 @@ public abstract class GDrawableTransformable extends Transformable implements GD
 		 fragmentShadLocID = -1;
 		 
 		 setInitialPositionOffset();		 
-		 
-		 isLighted = false;
+		
 		 isTextured = false;
 		 isShaderChanged = true;
 		 
@@ -45,22 +45,22 @@ public abstract class GDrawableTransformable extends Transformable implements GD
 	 public GDrawableTransformable(float x, float y, float z, int[] textureResourceIDs, float[] textureCoords, 
 			 				float[] shapeCoords, short[] indices){
 		 super(x,y,z);
-		  
-		 vManager = new VertexManager(shapeCoords, indices, true);
+		 
+		 isLighted = false;		 
+		
+		 vManager = new VertexManager(shapeCoords, indices, isLighted);
 		 tManager = new TextureManager(textureCoords);
 		 for(int i=0; i<((textureResourceIDs.length<tManager.MAX_TEXTURES[0])?textureResourceIDs.length:tManager.MAX_TEXTURES[0]); i++){
 			 tManager.setTextureResource(i, textureResourceIDs[i]);
 		 }
 		 cManager = null;
-		 isTextured = true;
 	 
 		 vertexShadLocID = -1;
 		 fragmentShadLocID = -1;
 		 
 		 setInitialPositionOffset();		 
 		 
-		 isLighted = false;
-		 isTextured = false;
+		 isTextured = true;
 		 isShaderChanged = true;
 		 
 		 isBillboard = false;
@@ -76,20 +76,17 @@ public abstract class GDrawableTransformable extends Transformable implements GD
 	 
 	 @Override
      public void initBuffers(){
-    	 vManager.setClientBuffers();
     	 vManager.setServerBuffers();
     	 
     	 if(!isTextured){
-    		 cManager.setClientBuffer();
     		 cManager.setServerBuffer();
     	 }
     	 else{
-    		 tManager.setClientBuffer();
     		 tManager.setServerBuffer();
     	 }
      }
 	 
-     private void updateBuffers(){
+     protected void updateBuffers(){
     	 vManager.updateClientBuffers();
     	 vManager.updateServerBuffers();
     	 
@@ -137,7 +134,7 @@ public abstract class GDrawableTransformable extends Transformable implements GD
       //**COLOR or TEXTURE**//
 		 if(isTextured){
 			 tManager.setTextureHandles(mProgram);
-			 tManager.setNBindTextureAttribute();
+			 tManager.setNBindTextureAttribute(mProgram);
 		 }
 		 else{
 			 cManager.setColorAttribute_Server(mProgram);
@@ -165,7 +162,7 @@ public abstract class GDrawableTransformable extends Transformable implements GD
 		 resetMatrcies();
 		 setMVPTransfMatrix(mVMatrix, mPMatrix);	 
 		 setupForDraw();
-		 
+		
 		 //OpenGL Primitive Drawing Instruction 
 		 //....
 		 
@@ -189,6 +186,7 @@ public abstract class GDrawableTransformable extends Transformable implements GD
 	 @Override
 	 public void setLightState(boolean state){
 		isLighted = state;
+		vManager.setNormalizedState(state);
 	 }
 	 @Override
 	 public void setVertexShaderLocID(int locID){
@@ -203,10 +201,32 @@ public abstract class GDrawableTransformable extends Transformable implements GD
 	 @Override
 	 public void setBillboardState(boolean state){
 		 isBillboard = state;
-	 }	 
+	 }	
+	 @Override
+	 public void setTransparency(float value){
+		 if(!isTextured){
+			 cManager.setTransparencyAll(value);			 
+		 }
+	 }
+	 public void setColor(float r, float g, float b){
+		 cManager.setColorAll(r, g, b);
+	 }
 	 
 	 @Override
-	 public boolean getBillboardState(){
+	 public float getTransparency(){
+		 float val;
+		 
+		 if(!isTextured){
+			val = cManager.getTransparency();
+		 }
+		 else{
+			val = 1.0f;
+		 }
+
+		 return val;
+	 }
+	 @Override
+ 	 public boolean getBillboardState(){
 		 return isBillboard;
 	 }
 	 @Override
@@ -216,5 +236,8 @@ public abstract class GDrawableTransformable extends Transformable implements GD
 	 @Override
 	 public boolean getTextureState(){
 		 return isTextured;
+	 }
+	 public float[] getColor(){
+		 return cManager.getColor();
 	 }
 }

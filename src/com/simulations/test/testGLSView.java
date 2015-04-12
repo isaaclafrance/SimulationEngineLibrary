@@ -14,8 +14,8 @@ public class testGLSView extends GLSView
 		setWorlds(new World[]{new testWorld()}); // setWorld(new testWorld()); 
 		
 		//Set and select world to be rendered
+	    setGLRenderer(new testGLRenderer());  		
 		setRenderedWorldIndex(0);
-	    setGLRenderer(new testGLRenderer());  
 	 }
      
      @Override
@@ -36,10 +36,8 @@ public class testGLSView extends GLSView
     	 			//dy = dy * -1;
     	 		}
     	 		
-    	 		//world.getCameraManager().getSelectedCamera().position[2] = (float)(Math.sin(angle) * 5.0);
-    	 		//world.getCameraManager().getSelectedCamera().lookAtPos[0] += dy*0.1f;
-    	 		getRenderedWorld().getCameraManager().getSelectedCamera().position[0] += dx*0.005f;
-    	 		//world.getCameraManager().getSelectedCamera().lookAtPos[0] = (float)(Math.cos(angle) * 5.0);
+    	 		float[] camPosition = getRenderedWorld().getCameraManager().getSelectedCamera().getPosition();
+    	 		getRenderedWorld().getCameraManager().getSelectedCamera().setPosition(camPosition[0]+dx*0.005f, camPosition[1], camPosition[2]+dy*0.005f);
 
     	 		requestRender();
     	 }

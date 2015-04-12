@@ -15,27 +15,21 @@ public class testGLRenderer extends GLRenderer {
 	@Override
 	public void onSurfaceCreated(GL10 unused, EGLConfig p2)
 	{
+		///
 		super.onSurfaceCreated(unused, p2);
-		
-		//
-		getWorldRef().onSurfaceCreated(p2);
 	}
 
 	@Override
 	public void onSurfaceChanged(GL10 unused, int width, int height)
 	{
+		///
 		super.onSurfaceChanged(unused, width, height);
-		
-		//
-		getWorldRef().onSurfaceChanged(width, height);
 	}
 
 	@Override
 	public void onDrawFrame(GL10 unused)
 	{
+		///
 		super.onDrawFrame(unused);
-		
-		//
-		getWorldRef().onDrawFrame();
 	}	
 }

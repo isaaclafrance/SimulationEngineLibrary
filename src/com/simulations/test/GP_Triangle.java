@@ -24,12 +24,14 @@ public class GP_Triangle extends GDrawablePhysicalObject
 		super.draw(mVMatrix, mPMatrix);
 		
 		// Draw the triangle using indices
-		GLES20.glBindBuffer(GLES20.GL_ELEMENT_ARRAY_BUFFER, vManager.indexServerBufferObjectID[0]);
-        GLES20.glDrawElements(GLES20.GL_TRIANGLE_STRIP, vManager.getIndicesArray().length, GLES20.GL_UNSIGNED_SHORT, 0);
+		GLES20.glBindBuffer(GLES20.GL_ELEMENT_ARRAY_BUFFER, vManager.getIndexServerBufferObjectID()[0]);
+        GLES20.glDrawElements(GLES20.GL_TRIANGLE_STRIP, vManager.getNumOfDrawnVertices(), GLES20.GL_UNSIGNED_SHORT, 0);
 
         // Disable vertex array
-        GLES20.glDisableVertexAttribArray(vManager.mVertexPositionHandle);	
+        GLES20.glDisableVertexAttribArray(vManager.get_mVertexPositionHandle());	
        
+        //TODO:Also texture vertex array attribute if necessary
+        
         
         //UNBIND IBO
         GLES20.glBindBuffer(GLES20.GL_ELEMENT_ARRAY_BUFFER, 0);

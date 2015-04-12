@@ -56,10 +56,10 @@ public class SphereAABBCollisionHandler extends CollisionHandler{
 	@Override
 	public void resolve_ObjectObject_Collision(){
 		float x, y , z , length, target, factor, lpa;
-		float[] len = new float[3];
+		float[] len = Quaternion.scratchVec1;
 		
-		for(PhysicalObject object1:getPhysicsEngineRef().getPhyObjects()){
-			for(PhysicalObject object2:getPhysicsEngineRef().getPhyObjects()){
+		for(PhysicalObject object1:physicsEngineRef.getPhyObjects()){
+			for(PhysicalObject object2:physicsEngineRef.getPhyObjects()){
 				length = (float) Math.sqrt(Math.pow(object1.getPosition()[0]-object2.getPosition()[0],2) + Math.pow(object1.getPosition()[1]-object2.getPosition()[1],2) + Math.pow(object1.getPosition()[2]-object2.getPosition()[2],2));
 				target = object1.bManager.boundRadius + object2.bManager.boundRadius;
 				
@@ -98,16 +98,13 @@ public class SphereAABBCollisionHandler extends CollisionHandler{
 	@Override
 	public void run(int w, int h){
 		resolve_ObjectObject_Collision();	
-		//resolve_BorderObject_Collision(w, h);
-		resolve_BorderObject_Collision();
-		resolve_IndividualBorderObject_Collision();
+		resolve_BorderObject_Collision(w, h);
+		resolve_IndividualBorderObject_Collision();		
 	}
 	@Override
 	public void run(){
 		resolve_ObjectObject_Collision();
-		if(boundaryPlanes != null){
-			resolve_BorderObject_Collision();
-		}
+		resolve_BorderObject_Collision();
 		resolve_IndividualBorderObject_Collision();
 	}
 }

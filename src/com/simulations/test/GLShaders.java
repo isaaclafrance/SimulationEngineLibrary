@@ -23,10 +23,9 @@ public final class GLShaders
     
     static final String texFragmentShaderCode =
 	"precision mediump float;" +
-	"uniform mat4 uMVPMatrix;" +
 	"varying vec2 vTexCoordinate;" +
 	"uniform sampler2D uTexture;" +
-	"void main() {" +
+	"void main(void) {" +
 	"  gl_FragColor = texture2D(uTexture, vTexCoordinate);" +
 	"}";    
     

@@ -16,14 +16,14 @@ public class VerletEngine extends PhysicsEngine{
 			inertia(delta);			
 			acceleration(delta);
 			
-			if(getLinks() != null){
+			if(getLinks().size() != 0){
 				for(Linkable link:getLinks()){
 					link.animate();
 				}
 			}
 			
-			getCollisionHandler().run(15, 5);	
-			//getCollisionHandler().run();
+			//getCollisionHandler().run(15, 5);	
+			getCollisionHandler().run();
 		}
 	}
 	

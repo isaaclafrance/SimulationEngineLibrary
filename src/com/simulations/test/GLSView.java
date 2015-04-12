@@ -12,16 +12,20 @@ public abstract class GLSView extends GLSurfaceView
      public GLSView(Context context){
 		 super(context);
 		 
-		 renderedWorldIndex = 0;
-		 
+		 this.context = context;
+
 		 setEGLContextClientVersion(2); //Use Opengl ES 2.0
 		 setEGLConfigChooser(8 , 8, 8, 8, 16, 0);
+		 
+		 ////
+		 setWorld(new BlankWorld(context));
+		 //setRenderedWorldIndex(0);
 	 }
     
      public World setWorld(World world){
     	 world.setContext(context);
     	 this.worlds = new World[]{world};
-    	 
+
     	 return world;
      }
      public void setWorlds(World[] worlds){
@@ -32,15 +36,16 @@ public abstract class GLSView extends GLSurfaceView
      }
      
      public void setRenderedWorldIndex(int index){ //Selected which one of the worlds array is to be rendered
+    	 if(glRenderer == null){
+    		 setGLRenderer(new GLRenderer());
+    	 }
     	 glRenderer.setWorldRef(worlds[index]);
     	 renderedWorldIndex = index;
      }    
      protected void setGLRenderer(GLRenderer glRenderer){
     	 //Create and set renderer
-    	 if(glRenderer.getWorldRef() == null){
-    		 glRenderer.setWorldRef(new BlankWorld(context));
-    	 }
-		 setGLRenderer(glRenderer);
+		 this.glRenderer = glRenderer;
+    	 setRenderer(glRenderer);
 		 setRenderMode(GLSurfaceView.RENDERMODE_CONTINUOUSLY);
      }  
      

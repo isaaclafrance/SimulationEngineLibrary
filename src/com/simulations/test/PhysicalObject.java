@@ -95,7 +95,7 @@ public class PhysicalObject extends Transformable{
 		posDisp[1] = getPosition()[1] - oldPosition[1];
 		posDisp[2] = getPosition()[2] - oldPosition[2];
 		
-		bManager.updateBoundingBox(getOrientationQuaternion(), getScale());
+		bManager.updateBoundingBox(getOrientation(), getScale());
 	}
 	
 	@Override

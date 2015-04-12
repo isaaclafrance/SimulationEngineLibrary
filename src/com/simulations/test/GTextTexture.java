@@ -4,11 +4,15 @@ import java.util.ArrayList;
 
 //TODO: Implement this class to use texture of characters instead of lines
 
-public class GTextTexture implements GText{
+public class GTextTexture extends GT_Sprite implements GText{
+	public String text;
 	public boolean isUpdated;
 	
 	////
-	public GTextTexture(){
+	public GTextTexture(String text, float fontSize, float[] pos){
+		super(pos[0], pos[1], pos[2], new int[1]);
+		
+		this.text = text;
 		isUpdated = false;
 	}
 	
@@ -16,14 +20,14 @@ public class GTextTexture implements GText{
 	
 	////
 	@Override
-	public ArrayList<Integer> findIndicesOfText(String text) {
+	public ArrayList<Integer> findIndicesOfWord(String word, int startIndex) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 	
 	////
 	public boolean hasText(String text){
-		
+		return false;
 	}
 	
 	////
@@ -78,7 +82,25 @@ public class GTextTexture implements GText{
 	}
 
 	@Override
-	public boolean getUpdatedState() {
+	public boolean getUpdateState() {
 		return isUpdated;
+	}
+
+	@Override
+	public float[] getColor() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void setColor(float r, float g, float b) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void setUpdateState(boolean state) {
+		// TODO Auto-generated method stub
+		
 	}
 }

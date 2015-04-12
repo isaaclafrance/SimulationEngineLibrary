@@ -1,6 +1,6 @@
 package com.simulations.test;
 
-public interface Linkable extends Animated{
+public interface Linkable{
 	public void setInitialTargetLengths();	
 	public void setNewTargetLengths(PhysicalObject obj1, PhysicalObject obj2, float newLength);
 	
@@ -18,4 +18,6 @@ public interface Linkable extends Animated{
 	public void removeObject(int objIndex); 
 	
 	public void resolveLinksLength();
+	
+	public void animate();
 }

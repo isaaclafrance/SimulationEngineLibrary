@@ -31,7 +31,7 @@ public class BoundingManager {
 			cornerPositions[13] = cornerPositions[16] = boundBoxLength[1]/2; //y top
 				cornerPositions[14] = -boundBoxLength[2]/2;//z back
 				cornerPositions[17] = boundBoxLength[2]/2; //z front
-			cornerPositions[19] = cornerPositions[22] = -boundBoxLength[1]/2;//y	bottom		
+			cornerPositions[19] = cornerPositions[22] = -boundBoxLength[1]/2;//y bottom		
 				cornerPositions[20] = -boundBoxLength[2]/2;//z back
 				cornerPositions[23] = boundBoxLength[2]/2; //z front
 	}
@@ -42,10 +42,10 @@ public class BoundingManager {
 		}
 		
 		//Rotate and reconfigure bounding boxes only if there is a change in orientation of object
-		if(	old_QuaterionComponents[0] != orientationQuaternion.x &&
-			old_QuaterionComponents[1] != orientationQuaternion.y &&
-			old_QuaterionComponents[2] != orientationQuaternion.z &&
-			old_QuaterionComponents[3] != orientationQuaternion.w){
+		if(	old_QuaterionComponents[0] != orientationQuaternion.getX() &&
+			old_QuaterionComponents[1] != orientationQuaternion.getY() &&
+			old_QuaterionComponents[2] != orientationQuaternion.getZ() &&
+			old_QuaterionComponents[3] != orientationQuaternion.getW()){
 			switch (bbType) {
 				case AABB:
 					updateAABB(orientationQuaternion);
@@ -59,10 +59,10 @@ public class BoundingManager {
 		}
 		
 		//Record current quaternion components to be used later
-		old_QuaterionComponents[0] = orientationQuaternion.x;
-		old_QuaterionComponents[1] = orientationQuaternion.y;
-		old_QuaterionComponents[2] = orientationQuaternion.z;
-		old_QuaterionComponents[3] = orientationQuaternion.w;
+		old_QuaterionComponents[0] = orientationQuaternion.getX();
+		old_QuaterionComponents[1] = orientationQuaternion.getY();
+		old_QuaterionComponents[2] = orientationQuaternion.getZ();
+		old_QuaterionComponents[3] = orientationQuaternion.getW();
 	}
 	
 	private void resizeBB(float[] scale){

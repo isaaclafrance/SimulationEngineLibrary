@@ -4,8 +4,8 @@ import java.util.ArrayList;
 
 public abstract class CollisionHandler {
 	//Fields
-	private PhysicsEngine physicsEngine;
-	final ArrayList<Float[]> boundaryPlanes = new ArrayList<Float[]>(); //The first index identifies the boundary. The second index identifies plane parameters associated with boundary. ie. Ax+By+Cz+D = 0
+	protected PhysicsEngine physicsEngineRef;
+	final protected ArrayList<Float[]> boundaryPlanes = new ArrayList<Float[]>(); //The first index identifies the boundary. The second index identifies plane parameters associated with boundary. ie. Ax+By+Cz+D = 0
 	
 	//Constructors
 	public CollisionHandler(){
@@ -18,10 +18,10 @@ public abstract class CollisionHandler {
 	
 	//**//Helper functions
 	abstract public Boolean areObjectsCloseEnough(PhysicalObject o1, PhysicalObject o2);
-	private float pointToPlane_Dist(Float[] point, Float[] planeCoeffs){
-		float dist = (float) (( planeCoeffs[0]*point[0]+planeCoeffs[1]*point[1]+planeCoeffs[2]*point[2]+ planeCoeffs[3])
+	private float pointToPlane_Dist(float pointX, float pointY, float pointZ, float planeCoeffsA, float planeCoeffsB, float planeCoeffsC, float planeCoeffsD){
+		float dist = (float) (( planeCoeffsA*pointX+planeCoeffsB*pointY+planeCoeffsC*pointZ+ planeCoeffsD)
 						/
-						Math.sqrt(planeCoeffs[0]*planeCoeffs[0] + planeCoeffs[1]*planeCoeffs[1] + planeCoeffs[2]*planeCoeffs[2])) ;
+						Math.sqrt(planeCoeffsA*planeCoeffsA + planeCoeffsB*planeCoeffsB + planeCoeffsC*planeCoeffsC)) ;
 		return dist;
 	}
 	
@@ -47,7 +47,7 @@ public abstract class CollisionHandler {
 		yBLen += obj.getPosition()[1];
 		zBLen += obj.getPosition()[2];
 
-		length = target + pointToPlane_Dist(new Float[]{xBLen, yBLen, zBLen}, planeCoeffs);
+		length = target + pointToPlane_Dist(xBLen, yBLen, zBLen, planeCoeffs[0], planeCoeffs[1], planeCoeffs[2], planeCoeffs[3]);
 			
 		if( length < 0){	
 			len[0] = length;
@@ -63,7 +63,7 @@ public abstract class CollisionHandler {
 		//Determine collision between object and border planes as determined by length and width of screen
 		float length, target;
 		
-		for(PhysicalObject object:physicsEngine.getPhyObjects()){
+		for(PhysicalObject object:physicsEngineRef.getPhyObjects()){
 			if(object.getPosition()[0]-object.bManager.boundBoxLength[0]/2  < -w/2.0f){
 				length = Math.abs(object.getPosition()[0]+w/2.0f);
 				target = object.bManager.boundBoxLength[0]/2;
@@ -91,29 +91,31 @@ public abstract class CollisionHandler {
 		}
 	}
 	public void resolve_BorderObject_Collision(){
-		//Determines collision between object and border planes through plane parameters.
-		float x, y, z, length, target, factor;
-		float[] len = new float[2];
-		
-		for(PhysicalObject object:physicsEngine.getPhyObjects()){
+		if(boundaryPlanes.size() != 0){
+			//Determines collision between object and border planes through plane parameters.
+			float x, y, z, length, target, factor;
+			float[] len = Quaternion.scratchVec1;
 			
-			for(Float[] planeCoeffs:boundaryPlanes){
-				for(int i=0;i<8;i++){
-					findPenLengthNTarget(object, i, planeCoeffs, len);
-					
-					if(len[0] != -1){
-						length = len[0];
-						target = len[1];
+			for(PhysicalObject object:physicsEngineRef.getPhyObjects()){
+				
+				for(Float[] planeCoeffs:boundaryPlanes){
+					for(int i=0;i<8;i++){
+						findPenLengthNTarget(object, i, planeCoeffs, len);
 						
-						if(length < target){						
-							x = planeCoeffs[0]*length;
-							y = planeCoeffs[1]*length;
-							z = planeCoeffs[2]*length;
+						if(len[0] != -1){
+							length = len[0];
+							target = len[1];
 							
-							factor = (length - target)/length;
-							object.getPosition()[0] -= factor*x*0.5f;
-							object.getPosition()[1] -= factor*y*0.5f;
-							object.getPosition()[2] -= factor*z*0.5f;
+							if(length < target && len[0] != -1){						
+								x = planeCoeffs[0]*length;
+								y = planeCoeffs[1]*length;
+								z = planeCoeffs[2]*length;
+								
+								factor = (length - target)/length;
+								object.getPosition()[0] -= factor*x*0.5f;
+								object.getPosition()[1] -= factor*y*0.5f;
+								object.getPosition()[2] -= factor*z*0.5f;
+							}
 						}
 					}
 				}
@@ -123,13 +125,14 @@ public abstract class CollisionHandler {
 	public void resolve_IndividualBorderObject_Collision(){
 		//Determines collision between object and their individual border planes through plane parameters.
 		float x,y,z, length, target, factor;
-		float[] len = new float[2];
+		float[] len = Quaternion.scratchVec1;
 		
-		for(PhysicalObject object:physicsEngine.getPhyObjects()){
-			if(object.boundaryPlanes != null){
+		for(PhysicalObject object:physicsEngineRef.getPhyObjects()){
+			if(object.boundaryPlanes.size() != 0){
 				for(Float[] planeCoeffs:object.boundaryPlanes){
 					for(int i=0;i<8;i++){
 						findPenLengthNTarget(object, i, planeCoeffs, len);					
+						
 						if(len[0] != -1){
 							length = len[0];
 							target = len[1];
@@ -167,9 +170,6 @@ public abstract class CollisionHandler {
 	////
 	
 	public void setPhysicsEngineRef(PhysicsEngine physicsEngine){
-		this.physicsEngine = physicsEngine;
-	}
-	public PhysicsEngine getPhysicsEngineRef(){
-		return physicsEngine;
+		this.physicsEngineRef = physicsEngine;
 	}
 }

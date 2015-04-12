@@ -3,7 +3,7 @@ package com.simulations.test;
 //TODO: Reduce the number of repeat vertices used
 
 public final class StandardCharacters {    
-	static final public float charSparation = 0.275f; //determine amount of spacing between characters
+	static final public float charSeparation = 0.075f; //determine amount of spacing between characters
 	static final public float whiteSpaceSeparation = 0.275f; //determines spacing for white spaces
 	static final public float squareCharRegionLengthWidth = 0.2f; //determines the maximum length and width of character region
 	static final float r = squareCharRegionLengthWidth/2;
@@ -219,8 +219,8 @@ public final class StandardCharacters {
 		},
 		
 							//4
-		new float[]{0.0f, r, 0.0f,  -r, 0.0f, 0.0f,
-				-r, 0.0f, 0.0f,  0.0f, r/4, 0.0f,
+		new float[]{-r, r, 0.0f,  -r, 0.0f, 0.0f,
+				-r, 0.0f, 0.0f,  r, 0.0f, 0.0f,
 				0.0f, r, 0.0f,  0.0f, -r, 0.0f
 		},
 		
@@ -290,227 +290,107 @@ public final class StandardCharacters {
 		int maxVertNum = symbols[0].length/3;
 		
 		for(int i=0; i<symbols.length; i++){
-			if(symbols[i].length > maxVertNum){
-				maxVertNum = symbols[i].length;
+			if(symbols[i].length/3 > maxVertNum){
+				maxVertNum = symbols[i].length/3;
 			}
 		}
 		 return maxVertNum;
 	}
 	
 	//
+	private static int copyVertInfo(int symbolIndex, float[] vertArray){
+		for(int i=0; i<StandardCharacters.symbols[symbolIndex].length; i++){
+			vertArray[i] = StandardCharacters.symbols[symbolIndex][i];
+		}		
+		return StandardCharacters.symbols[symbolIndex].length;
+	}
 	public static int loadCharacterVertex(char character, float[] vertArray){
 		switch (character) {
 			case 'A':	
-				for(int i=0; i<StandardCharacters.symbols[1].length; i++){
-					vertArray[i] = StandardCharacters.symbols[1][i];
-				}
-				return StandardCharacters.symbols[1].length;
+				return copyVertInfo(1, vertArray);
 			case 'B':
-				for(int i=0; i<StandardCharacters.symbols[2].length; i++){
-					vertArray[i] = StandardCharacters.symbols[2][i];
-				}
-				return StandardCharacters.symbols[2].length;
+				return copyVertInfo(2, vertArray);
 			case 'C':	
-				for(int i=0; i<StandardCharacters.symbols[3].length; i++){
-					vertArray[i] = StandardCharacters.symbols[3][i];
-				}
-				return StandardCharacters.symbols[3].length;
+				return copyVertInfo(3, vertArray);
 			case 'D':
-				for(int i=0; i<StandardCharacters.symbols[4].length; i++){
-					vertArray[i] = StandardCharacters.symbols[4][i];
-				}
-				return StandardCharacters.symbols[4].length;
+				return copyVertInfo(4, vertArray);
 			case 'E':	
-				for(int i=0; i<StandardCharacters.symbols[5].length; i++){
-					vertArray[i] = StandardCharacters.symbols[5][i];
-				}
-				return StandardCharacters.symbols[5].length;
+				return copyVertInfo(5, vertArray);
 			case 'F':
-				for(int i=0; i<StandardCharacters.symbols[6].length; i++){
-					vertArray[i] = StandardCharacters.symbols[6][i];
-				}
-				return StandardCharacters.symbols[6].length;
+				return copyVertInfo(6, vertArray);
 			case 'G':	
-				for(int i=0; i<StandardCharacters.symbols[7].length; i++){
-					vertArray[i] = StandardCharacters.symbols[7][i];
-				}
-				return StandardCharacters.symbols[7].length;
+				return copyVertInfo(7, vertArray);
 			case 'H':
-				for(int i=0; i<StandardCharacters.symbols[8].length; i++){
-					vertArray[i] = StandardCharacters.symbols[8][i];
-				}
-				return StandardCharacters.symbols[8].length;
+				return copyVertInfo(8, vertArray);
 			case 'I':	
-				for(int i=0; i<StandardCharacters.symbols[9].length; i++){
-					vertArray[i] = StandardCharacters.symbols[9][i];
-				}
-				return StandardCharacters.symbols[9].length;
+				return copyVertInfo(9, vertArray);
 			case 'J':
-				for(int i=0; i<StandardCharacters.symbols[10].length; i++){
-					vertArray[i] = StandardCharacters.symbols[10][i];
-				}
-				return StandardCharacters.symbols[10].length;
+				return copyVertInfo(10, vertArray);
 			case 'K':	
-				for(int i=0; i<StandardCharacters.symbols[11].length; i++){
-					vertArray[i] = StandardCharacters.symbols[11][i];
-				}
-				return StandardCharacters.symbols[11].length;
+				return copyVertInfo(11, vertArray);
 			case 'L':
-				for(int i=0; i<StandardCharacters.symbols[12].length; i++){
-					vertArray[i] = StandardCharacters.symbols[12][i];
-				}
-				return StandardCharacters.symbols[12].length;
+				return copyVertInfo(12, vertArray);
 			case 'M':	
-				for(int i=0; i<StandardCharacters.symbols[13].length; i++){
-					vertArray[i] = StandardCharacters.symbols[13][i];
-				}
-				return StandardCharacters.symbols[13].length;
+				return copyVertInfo(13, vertArray);
 			case 'N':
-				for(int i=0; i<StandardCharacters.symbols[14].length; i++){
-					vertArray[i] = StandardCharacters.symbols[14][i];
-				}
-				return StandardCharacters.symbols[14].length;
+				return copyVertInfo(14, vertArray);
 			case 'O':	
-				for(int i=0; i<StandardCharacters.symbols[15].length; i++){
-					vertArray[i] = StandardCharacters.symbols[15][i];
-				}
-				return StandardCharacters.symbols[15].length;
+				return copyVertInfo(15, vertArray);
 			case 'P':
-				for(int i=0; i<StandardCharacters.symbols[16].length; i++){
-					vertArray[i] = StandardCharacters.symbols[16][i];
-				}
-				return StandardCharacters.symbols[16].length;
+				return copyVertInfo(16, vertArray);
 			case 'Q':	
-				for(int i=0; i<StandardCharacters.symbols[17].length; i++){
-					vertArray[i] = StandardCharacters.symbols[17][i];
-				}
-				return StandardCharacters.symbols[17].length;
+				return copyVertInfo(17, vertArray);
 			case 'R':
-				for(int i=0; i<StandardCharacters.symbols[18].length; i++){
-					vertArray[i] = StandardCharacters.symbols[18][i];
-				}
-				return StandardCharacters.symbols[18].length;
+				return copyVertInfo(18, vertArray);
 			case 'S':	
-				for(int i=0; i<StandardCharacters.symbols[19].length; i++){
-					vertArray[i] = StandardCharacters.symbols[19][i];
-				}
-				return StandardCharacters.symbols[19].length;
+				return copyVertInfo(19, vertArray);
 			case 'T':
-				for(int i=0; i<StandardCharacters.symbols[20].length; i++){
-					vertArray[i] = StandardCharacters.symbols[20][i];
-				}
-				return StandardCharacters.symbols[20].length;
+				return copyVertInfo(20, vertArray);
 			case 'U':	
-				for(int i=0; i<StandardCharacters.symbols[21].length; i++){
-					vertArray[i] = StandardCharacters.symbols[21][i];
-				}
-				return StandardCharacters.symbols[21].length;
+				return copyVertInfo(21, vertArray);
 			case 'V':
-				for(int i=0; i<StandardCharacters.symbols[22].length; i++){
-					vertArray[i] = StandardCharacters.symbols[22][i];
-				}
-				return StandardCharacters.symbols[22].length;
+				return copyVertInfo(22, vertArray);
 			case 'W':	
-				for(int i=0; i<StandardCharacters.symbols[23].length; i++){
-					vertArray[i] = StandardCharacters.symbols[23][i];
-				}
-				return StandardCharacters.symbols[23].length;
+				return copyVertInfo(23, vertArray);
 			case 'X':
-				for(int i=0; i<StandardCharacters.symbols[24].length; i++){
-					vertArray[i] = StandardCharacters.symbols[24][i];
-				}
-				return StandardCharacters.symbols[24].length;
+				return copyVertInfo(24, vertArray);
 			case 'Y':	
-				for(int i=0; i<StandardCharacters.symbols[25].length; i++){
-					vertArray[i] = StandardCharacters.symbols[25][i];
-				}
-				return StandardCharacters.symbols[25].length;
+				return copyVertInfo(25, vertArray);
 			case 'Z':
-				for(int i=0; i<StandardCharacters.symbols[26].length; i++){
-					vertArray[i] = StandardCharacters.symbols[26][i];
-				}
-				return StandardCharacters.symbols[26].length;
+				return copyVertInfo(26, vertArray);
 			case '0':	
-				for(int i=0; i<StandardCharacters.symbols[27].length; i++){
-					vertArray[i] = StandardCharacters.symbols[27][i];
-				}
-				return StandardCharacters.symbols[27].length;
+				return copyVertInfo(27, vertArray);
 			case '1':
-				for(int i=0; i<StandardCharacters.symbols[28].length; i++){
-					vertArray[i] = StandardCharacters.symbols[28][i];
-				}
-				return StandardCharacters.symbols[28].length;
+				return copyVertInfo(28, vertArray);
 			case '2':	
-				for(int i=0; i<StandardCharacters.symbols[29].length; i++){
-					vertArray[i] = StandardCharacters.symbols[29][i];
-				}
-				return StandardCharacters.symbols[29].length;
+				return copyVertInfo(29, vertArray);
 			case '3':
-				for(int i=0; i<StandardCharacters.symbols[30].length; i++){
-					vertArray[i] = StandardCharacters.symbols[30][i];
-				}
-				return StandardCharacters.symbols[30].length;
+				return copyVertInfo(30, vertArray);
 			case '4':	
-				for(int i=0; i<StandardCharacters.symbols[31].length; i++){
-					vertArray[i] = StandardCharacters.symbols[31][i];
-				}
-				return StandardCharacters.symbols[31].length;
+				return copyVertInfo(31, vertArray);
 			case '5':
-				for(int i=0; i<StandardCharacters.symbols[32].length; i++){
-					vertArray[i] = StandardCharacters.symbols[32][i];
-				}
-				return StandardCharacters.symbols[32].length;
+				return copyVertInfo(32, vertArray);
 			case '6':	
-				for(int i=0; i<StandardCharacters.symbols[33].length; i++){
-					vertArray[i] = StandardCharacters.symbols[33][i];
-				}
-				return StandardCharacters.symbols[33].length;
+				return copyVertInfo(33, vertArray);
 			case '7':
-				for(int i=0; i<StandardCharacters.symbols[34].length; i++){
-					vertArray[i] = StandardCharacters.symbols[34][i];
-				}
-				return StandardCharacters.symbols[34].length;
+				return copyVertInfo(34, vertArray);
 			case '8':	
-				for(int i=0; i<StandardCharacters.symbols[35].length; i++){
-					vertArray[i] = StandardCharacters.symbols[35][i];
-				}
-				return StandardCharacters.symbols[35].length;
+				return copyVertInfo(35, vertArray);
 			case '9':
-				for(int i=0; i<StandardCharacters.symbols[36].length; i++){
-					vertArray[i] = StandardCharacters.symbols[36][i];
-				}
-				return StandardCharacters.symbols[36].length;
+				return copyVertInfo(36, vertArray);
 			case '#':	
-				for(int i=0; i<StandardCharacters.symbols[37].length; i++){
-					vertArray[i] = StandardCharacters.symbols[37][i];
-				}
-				return StandardCharacters.symbols[37].length;
+				return copyVertInfo(37, vertArray);
 			case '.':
-				for(int i=0; i<StandardCharacters.symbols[38].length; i++){
-					vertArray[i] = StandardCharacters.symbols[38][i];
-				}
-				return StandardCharacters.symbols[38].length;
+				return copyVertInfo(38, vertArray);
 			case ':':	
-				for(int i=0; i<StandardCharacters.symbols[39].length; i++){
-					vertArray[i] = StandardCharacters.symbols[39][i];
-				}
-				return StandardCharacters.symbols[39].length;
+				return copyVertInfo(39, vertArray);
 			case '-':
-				for(int i=0; i<StandardCharacters.symbols[40].length; i++){
-					vertArray[i] = StandardCharacters.symbols[40][i];
-				}
-				return StandardCharacters.symbols[40].length;
+				return copyVertInfo(40, vertArray);
 			case '+':
-				for(int i=0; i<StandardCharacters.symbols[41].length; i++){
-					vertArray[i] = StandardCharacters.symbols[41][i];
-				}
-				return StandardCharacters.symbols[41].length;
+				return copyVertInfo(41, vertArray);
 	
 			default:
-				for(int i=0; i<StandardCharacters.symbols[0].length; i++){
-					vertArray[i] = StandardCharacters.symbols[0][i];
-				}
-				return StandardCharacters.symbols[0].length;
+				return copyVertInfo(0, vertArray);
 		}
 		
 	}

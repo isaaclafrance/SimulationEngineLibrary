@@ -3,9 +3,10 @@ package com.simulations.test;
 import java.util.ArrayList;
 import android.content.Context;
 
-//This class is a container class that initializes links into an a array of GT_Line objects. It will use the connections list to dtermine how to transform and rotate each GT_Line object based on the position of the objects linked. This container class will implement the GDrawable interface although will not itself be technically drawable, rather it will use its draw function to call the draw functions of each individual GT_Line object.     
+//This class is a container class that initializes links into an a array of GT_Line objects. It will use the connections list to determine how to transform and rotate each GT_Line object based on the position of the objects linked. This container class will implement the GDrawable interface although will not itself be technically drawable, rather it will use its draw function to call the draw functions of each individual GT_Line object.     
 
 public final class GT_DrawableMultiLink extends MultiLink implements GDrawable{
+	private Quaternion orientationQuaternion;
 	public ArrayList<GT_Line> linesList;
 	public float[] color;
 	
@@ -15,6 +16,8 @@ public final class GT_DrawableMultiLink extends MultiLink implements GDrawable{
 
 		this.linesList = new ArrayList<GT_Line>(linkedObjects.length-1);
 		this.color = new float[]{r, g, b, transparency};
+		
+		orientationQuaternion = new Quaternion();
 		
 		setInitialTargetLengths();
 	}
@@ -143,23 +146,20 @@ public final class GT_DrawableMultiLink extends MultiLink implements GDrawable{
 				dy1 = y1-y2;
 				dz1 = z1-z2;
 				
-				dx2 = linesList.get(i).vManager.getShapeCoordsArray()[0] - linesList.get(i).vManager.getShapeCoordsArray()[3];
-				dy2 = linesList.get(i).vManager.getShapeCoordsArray()[1] - linesList.get(i).vManager.getShapeCoordsArray()[4];
-				dz2 = linesList.get(i).vManager.getShapeCoordsArray()[2] - linesList.get(i).vManager.getShapeCoordsArray()[5];
+				dx2 = linesList.get(i).vManager.getShapeCoords().get(0) - linesList.get(i).vManager.getShapeCoords().get(3);
+				dy2 = linesList.get(i).vManager.getShapeCoords().get(1) - linesList.get(i).vManager.getShapeCoords().get(4);
+				dz2 = linesList.get(i).vManager.getShapeCoords().get(2) - linesList.get(i).vManager.getShapeCoords().get(5);
 				
 				dot = dx1*dx2 + dy1*dy2 + dz1*dz2;
 				angle = (float) Math.acos(dot/(Math.sqrt(dx1*dx1+dy1*dy1+dz1*dz1)*Math.sqrt(dx2*dx2+dy2*dy2+dz2*dz2)));
 				
 				//calculate axis of rotation
-				x1 = dy1*dz2 - dz1*dy2;
-				y1 = dz1*dx2 - dx1*dz2;
-				z1 = dx1*dy2 - dy1*dx2;
+				Quaternion.scratchVec1[0] = dy1*dz2 - dz1*dy2;
+				Quaternion.scratchVec1[1] = dz1*dx2 - dx1*dz2;
+				Quaternion.scratchVec1[2] = dx1*dy2 - dy1*dx2;
 				
-				//Update the orientation of each line
-				for(GT_Line line:linesList){
-					line.getOrientationQuaternion().fromAxis_Angle_SelfMultiply(new float[]{x1,y1,z1}, angle);
-				}
-				
+				//Update the orientation of line
+				linesList.get(i).getOrientation().fromAxis_Angle_SelfMultiply(Quaternion.scratchVec1, angle);
 		}
 	}
 	@Override
@@ -218,24 +218,49 @@ public final class GT_DrawableMultiLink extends MultiLink implements GDrawable{
 			gTL.setBillboardState(state);
 		}		
 	}	
+	public void setTransparency(float value){
+		for(GT_Line gtLine:linesList){
+			gtLine.setTransparency(value);
+		}
+	}
 	
 	@Override
-	public boolean getBillboardState(){
-		if(linesList.size()>0){
-			return linesList.get(0).getBillboardState();
+	public float getTransparency(){
+		float value = 0.0f;
+		int count = 0;
+		
+		for(GT_Line gtLine:linesList){
+			value += gtLine.getTransparency();
+			count++;
 		}
-		else{
-			return false;
-		} 
+		
+		return value/count;		
+	}
+	@Override
+	public boolean getBillboardState(){
+		boolean state = true;
+		
+		for(GT_Line gtLine:linesList){
+			if(!gtLine.getBillboardState()){
+				state = false;
+			}
+			break;
+		}
+		
+		return state;
 	}
 	@Override
 	public boolean getLightState() {
-		if(linesList.size()>0){
-			return linesList.get(0).getBillboardState();
+		boolean state = true;
+		
+		for(GT_Line gtLine:linesList){
+			if(!gtLine.getLightState()){
+				state = false;
+			}
+			break;
 		}
-		else{
-			return false;
-		} 
+		
+		return state;
 	}
 
 	////
@@ -253,16 +278,26 @@ public final class GT_DrawableMultiLink extends MultiLink implements GDrawable{
 	}	
 		
 	@Override
-	public float[] getPosition(){
-		return null;
+	public float[] getPosition(){ //Returns the average postions of all the lines
+		float posX = 0.0f, posY = 0.0f, posZ = 0.0f;
+		int count = 0;
+		
+		for(GT_Line gtLine:linesList){
+			posX += gtLine.getPosition()[0];
+			posY += gtLine.getPosition()[1];
+			posZ += gtLine.getPosition()[2];
+			count++;
+		}
+		
+		return new float[]{posX/count, posY/count, posZ/count};
 	}
 	@Override
 	public boolean getTextureState() {
 		return false;
 	}
 	@Override
-	public Quaternion getOrientationQuaternion(){
-		return null;
+	public Quaternion getOrientation(){
+		return orientationQuaternion;
 	}
 
 

@@ -16,17 +16,19 @@ public abstract class GDrawablePhysicalObject extends PhysicalObject implements 
      private int vertexShadLocID;
      private int fragmentShadLocID;
  
-	 private boolean isLighted;
-	 private boolean isTextured;
-	 private boolean isShaderChanged;
+	 protected boolean isLighted;
+	 protected boolean isTextured;
+	 protected boolean isShaderChanged;
 	 
-	 public boolean isBillboard; //If true, then the texture rotates such that it is always facing the camera
+	 protected boolean isBillboard; //If true, then the texture rotates such that it is always facing the camera
 	 
 	 public GDrawablePhysicalObject(float x, float y, float z, float r, float g, float b, float transparency, 
 			 				 float[] shapeCoords, short[] indices, float mass, Float[][] boundaryPlanes, BoundingManager.BoundingBoxTypes bbType){
 		 super(x,y,z, mass, boundaryPlanes, bbType);
 		 
-		 vManager = new VertexManager(shapeCoords, indices, true);
+		 isLighted = false;			 
+		 
+		 vManager = new VertexManager(shapeCoords, indices, isLighted);
 		 cManager = new ColorManager(r, g, b, transparency, vManager.getNumOfDrawnVertices());
 		 tManager = null;
 	 
@@ -38,8 +40,8 @@ public abstract class GDrawablePhysicalObject extends PhysicalObject implements 
 		 mMVMatrix = new float[16];
 		 mMVPMatrix = new float[16];
 		 
-		 isLighted = false;
 		 isTextured = false;
+		 isShaderChanged = true;
 		 
 		 isBillboard = false;
 	 }
@@ -47,7 +49,9 @@ public abstract class GDrawablePhysicalObject extends PhysicalObject implements 
 			 				 float[] shapeCoords, short[] indices, float mass, Float[][] boundaryPlanes, BoundingManager.BoundingBoxTypes bbType){
 		 super(x,y,z, mass, boundaryPlanes, bbType);
 		  
-		 vManager = new VertexManager(shapeCoords, indices, true);
+		 isLighted = false;			 
+		 
+		 vManager = new VertexManager(shapeCoords, indices, isLighted);
 		 tManager = new TextureManager(textureCoords);
 		 for(int i=0; i<((textureResourceIDs.length<tManager.MAX_TEXTURES[0])?textureResourceIDs.length:tManager.MAX_TEXTURES[0]); i++){
 			 tManager.setTextureResource(i, textureResourceIDs[i]);
@@ -62,8 +66,8 @@ public abstract class GDrawablePhysicalObject extends PhysicalObject implements 
 		 mMVMatrix = new float[16];
 		 mMVPMatrix = new float[16];
 		 
-		 isLighted = false;
 		 isTextured = true;
+		 isShaderChanged = true;	
 		 
 		 isBillboard = false;
 	 }
@@ -80,20 +84,17 @@ public abstract class GDrawablePhysicalObject extends PhysicalObject implements 
 		
      @Override
      public void initBuffers(){
-    	 vManager.setClientBuffers();
     	 vManager.setServerBuffers();
     	 
     	 if(!isTextured){
-    		 cManager.setClientBuffer();
     		 cManager.setServerBuffer();
     	 }
     	 else{
-    		 tManager.setClientBuffer();
     		 tManager.setServerBuffer();
     	 }
      }
      
-     private void updateBuffers(){
+     protected void updateBuffers(){
     	 vManager.updateClientBuffers();
     	 vManager.updateServerBuffers();
     	 
@@ -128,7 +129,7 @@ public abstract class GDrawablePhysicalObject extends PhysicalObject implements 
     	 tManager.clearAll();
      }
      
-	 private void setupForDraw(){
+	 protected void setupForDraw(){
 	  // Add program to OpenGL environment
 		 GLES20.glUseProgram(mProgram);
 		 
@@ -141,7 +142,7 @@ public abstract class GDrawablePhysicalObject extends PhysicalObject implements 
 	  //**COLOR or TEXTURE**//
 		 if(isTextured){
 			 tManager.setTextureHandles(mProgram);
-			 tManager.setNBindTextureAttribute();
+			 tManager.setNBindTextureAttribute(mProgram);
 		 }
 		 else{
 			 cManager.setColorAttribute_Server(mProgram);
@@ -193,6 +194,7 @@ public abstract class GDrawablePhysicalObject extends PhysicalObject implements 
 	 @Override
 	 public void setLightState(boolean state){
 		 isLighted = state;
+		 vManager.setNormalizedState(state);
 	 }
 	 @Override
 	 public void setVertexShaderLocID(int locID){
@@ -208,7 +210,29 @@ public abstract class GDrawablePhysicalObject extends PhysicalObject implements 
 	 public void setBillboardState(boolean state){
 		 isBillboard = state;
 	 }	 
-	 
+	 @Override
+	 public void setTransparency(float value){
+		 if(!isTextured){
+			 cManager.setTransparencyAll(value);			 
+		 }
+	 }
+	 public void setColor(float r, float g, float b){
+		 cManager.setColorAll(r, g, b);
+	 }
+
+	 @Override
+	 public float getTransparency(){
+		 float val;
+		 
+		 if(!isTextured){
+			val = cManager.getTransparency();
+		 }
+		 else{
+			val = 1.0f;
+		 }
+
+		 return val;
+	 }
 	 @Override
 	 public boolean getBillboardState(){
 		 return isBillboard;
@@ -220,5 +244,8 @@ public abstract class GDrawablePhysicalObject extends PhysicalObject implements 
 	 @Override
 	 public boolean getTextureState(){
 		 return isTextured;
+	 }
+	 public float[] getColor(){
+		 return cManager.getColor();
 	 }
 }
